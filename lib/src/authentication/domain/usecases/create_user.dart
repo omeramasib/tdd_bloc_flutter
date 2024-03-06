@@ -1,18 +1,34 @@
+import 'package:equatable/equatable.dart';
+import 'package:tdd_flutter/core/usecase/usecase.dart';
+
 import '../../../../core/utils/typedef.dart';
 import '../repositories/authentication_repository.dart';
 
-class CreateUser {
- const CreateUser(this._repository);
+class CreateUser extends UsecaseWithParams<void, CreateUserParams> {
+  const CreateUser(this._repository);
 
   final AuthenticationRepository _repository;
 
- ResultVoid createUser({
-   required String createdAt,
-   required String name,
-   required String avatar,
- }) async => await _repository.createUser(
-       createdAt: createdAt,
-       name: name,
-       avatar: avatar,
-     );
+  @override
+  ResultFuture call(CreateUserParams params) async =>
+      await _repository.createUser(
+        createdAt: params.createdAt,
+        name: params.name,
+        avatar: params.avatar,
+      );
+}
+
+class CreateUserParams extends Equatable {
+  final String createdAt;
+  final String name;
+  final String avatar;
+
+  const CreateUserParams({
+    required this.createdAt,
+    required this.name,
+    required this.avatar,
+  });
+
+  @override
+  List<Object?> get props => [createdAt, name, avatar];
 }
